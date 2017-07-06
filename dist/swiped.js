@@ -97,7 +97,7 @@
         this.dir = o.dir;
         this.group = o.group;
         this.id = Swiped.elemId++;
-        
+
         this.onOpen = typeof o.onOpen === 'function' ? o.onOpen : fn;
         this.onClose = typeof o.onClose === 'function' ? o.onClose : fn;
 
@@ -119,7 +119,7 @@
     Swiped.init = function(o) {
         Swiped.groupCounter++;
 
-        var elems = document.querySelectorAll(o.query);
+        var elems = o.element.querySelectorAll(o.query);
         var group = [];
 
         delete o.query;
@@ -142,7 +142,7 @@
 
     Swiped._closeAll = function(groupNumber) {
         Swiped._elems.forEach(function(Swiped) {
-            if (Swiped.group === groupNumber) {
+            if (Swiped.group !== groupNumber) {
                 Swiped.close(true);
             }
         });
@@ -152,7 +152,7 @@
         var that = this;
 
         function trEnd() {
-            cb.call(that);
+            cb(that);
             node.removeEventListener(transitionEvent, trEnd);
         }
 
@@ -183,11 +183,8 @@
 
         this.resetValue();
 
-        if (this.list) {
-            Swiped._closeAll(this.group);
-        } else {
-            this.close(true);
-        }
+        Swiped._closeAll(this.group);
+        this.close(true);
     };
 
     Swiped.prototype.touchMove = function(e) {
