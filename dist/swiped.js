@@ -148,11 +148,16 @@
         });
     };
 
+    Swiped.transitionTimeout = 0;
     Swiped.prototype.transitionEnd = function(node, cb) {
         var that = this;
 
         function trEnd() {
-            cb(that);
+            if (Swiped.transitionTimeout) clearTimeout(Swiped.transitionTimeout);
+            Swiped.transitionTimeout = setTimeout(function () {
+                cb(that);
+                clearTimeout(Swiped.transitionTimeout);
+            }, 5)
             node.removeEventListener(transitionEvent, trEnd);
         }
 
